@@ -9,7 +9,7 @@ int main()
     door = " / ";
     size = 10;
     doorPos = {size-1, 5};
-    std::cout << "TIC TAC TOE\n";
+    std::cout << "CONSOLE DUNGEON\n";
     StartNewGame();
     system("pause");
 }
