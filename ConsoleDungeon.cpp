@@ -30,7 +30,7 @@ void DrawBoard()
     system("CLS");
     std::cout << "CONSOLE DUNGEON\n";
     std::cout << "WASD to move\n";
-    std::cout << std::endl;
+    std::cout << "Player's position: " << playerPos[0] << ", " << playerPos[1] << std::endl;
     for (int y = 0; y < size; y++) {
         for (int x = 0; x < size; x++) {
 
@@ -180,13 +180,14 @@ void CheckPosition()
         hasKey = true;
         key = " . ";
     }
-    if (playerPos == doorPos)
+    if (playerPos == doorPos && door == " / ")
     {
         if (!hasKey) {
             incidentalMessage = "You have found a DOOR, but you need a KEY!";
         }
         else {
             incidentalMessage = "You have unlocked the DOOR with the KEY!";
+            door = "   ";
         }
     }
     else
