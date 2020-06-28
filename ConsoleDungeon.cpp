@@ -11,7 +11,6 @@ int main()
     doorPos = { size - 2, 5 };
     winPos[0] = doorPos[0] + 1;
     winPos[1] = doorPos[1];
-    std::cout << "CONSOLE DUNGEON\n";
     StartNewGame();
     system("pause");
 }
@@ -29,6 +28,8 @@ void StartNewGame()
 void DrawBoard()
 {
     system("CLS");
+    std::cout << "CONSOLE DUNGEON\n";
+    std::cout << "WASD to move\n";
     std::cout << std::endl;
     for (int y = 0; y < size; y++) {
         for (int x = 0; x < size; x++) {
