@@ -7,8 +7,10 @@ int main()
     player = " O ";
     key = " K ";
     door = " / ";
-    size = 10;
-    doorPos = {size-1, 5};
+    size = 12;
+    doorPos = { size - 2, 5 };
+    winPos[0] = doorPos[0] + 1;
+    winPos[1] = doorPos[1];
     std::cout << "CONSOLE DUNGEON\n";
     StartNewGame();
     system("pause");
@@ -43,26 +45,38 @@ void DrawBoard()
             else if (x == doorPos[0] && y == doorPos[1]) {
                 std::cout << door;
             }
-
-            // Draw the left and right walls
+            // Draw a space at the left and right edges
             else if (x == 0) {
-                std::cout << " | ";
+                std::cout << "   ";
             }
             else if (x == size - 1) {
+                std::cout << "   ";
+            }
+            // Draw the left and right walls
+            else if (x == 1 && y != 0 && y != size - 1) {
                 std::cout << " | ";
             }
-            // Draw the top and bottom walls
+            else if (x == size - 2 && y != 0 && y != size - 1) {
+                std::cout << " | ";
+            }
+            // Draw a space at the top and bottom edges
             else if (y == 0) {
-                std::cout << "---";
+                std::cout << "   ";
             }
             else if (y == size - 1) {
+                std::cout << "   ";
+            }
+            // Draw the top and bottom walls
+            else if (y == 1) {
+                std::cout << "---";
+            }
+            else if (y == size - 2) {
                 std::cout << "---";
             }
             // Draw the floor
             else {
                 std::cout << " . ";
             }
-
             // Break line for the edge of the room
             if (x == size - 1) {
                 std::cout << "\n";
@@ -70,30 +84,91 @@ void DrawBoard()
         }
     }
     std::cout << std::endl;
-    std::cout << std::endl;
     if (hasKey) {
-        std::cout << "You have found the key!" << std::endl;
+        std::cout << "You have found the KEY!" << std::endl;
     }
+    std::cout << incidentalMessage << std::endl;
 }
 
 void GetKeyPress()
 {
     char keyPress = _getch();
-    if (keyPress == 'w' && playerPos[1] > 1)
+
+    if (keyPress == 'w')
     {
-        --playerPos[1];
+        if (playerPos == doorPos && winPos[1] < playerPos[1])
+        {
+            if (hasKey) {
+                --playerPos[1];
+            }
+            else {
+                return;
+            }
+        }
+        else if (playerPos[0] == doorPos[0] && playerPos[1] == doorPos[1] + 1)
+        {
+             --playerPos[1];
+        }
+        else if (playerPos[1] > 2 && playerPos[0] > 1 && playerPos[0] < size -2) {
+            --playerPos[1];
+        }
     }
-    else if (keyPress == 's' && playerPos[1] < (size - 2))
+    else if (keyPress == 's')
     {
-        ++playerPos[1];
+        if (playerPos == doorPos && winPos[1] > playerPos[1])
+        {
+            if (hasKey) {
+                ++playerPos[1];
+            }
+            else {
+                return;
+            }
+        }
+        else if (playerPos[0] == doorPos[0] && playerPos[1] == doorPos[1] - 1)
+        {
+             ++playerPos[1];
+        }
+        else if (playerPos[1] < (size - 3) && playerPos[0] > 1 && playerPos[0] < size - 2) {
+            ++playerPos[1];
+        }
     }
-    else if (keyPress == 'd' && playerPos[0] < (size - 2))
+    else if (keyPress == 'd')
     {
-        ++playerPos[0];
+        if (playerPos == doorPos && winPos[0] > playerPos[0])
+        {
+            if (hasKey) {
+                ++playerPos[0];
+            }
+            else {
+                return;
+            }
+        }
+        else if (playerPos[0] == doorPos[0] - 1 && playerPos[1] == doorPos[1])
+        {
+            ++playerPos[0];
+        }
+        else if (playerPos[0] < (size - 3) && playerPos[1] > 1 && playerPos[1] < size - 2) {
+            ++playerPos[0];
+        }
     }
-    else if (keyPress == 'a' && playerPos[0] > 1)
+    else if (keyPress == 'a')
     {
-        --playerPos[0];
+        if (playerPos == doorPos && winPos[0] < playerPos[0])
+        {
+            if (hasKey) {
+                --playerPos[0];
+            }
+            else {
+                return;
+            }
+        }
+        else if (playerPos[0] == doorPos[0] + 1 && playerPos[1] == doorPos[1])
+        {
+            --playerPos[0];
+        }
+        else if (playerPos[0] > 2 && playerPos[1] > 1 && playerPos[1] < size - 2) {
+            --playerPos[0];
+        }
     }
 }
 
@@ -103,5 +178,23 @@ void CheckPosition()
     {
         hasKey = true;
         key = " . ";
+    }
+    if (playerPos == doorPos)
+    {
+        if (!hasKey) {
+            incidentalMessage = "You have found a DOOR, but you need a KEY!";
+        }
+        else {
+            incidentalMessage = "You have unlocked the DOOR with the KEY!";
+        }
+    }
+    else
+    {
+        incidentalMessage = "";
+    }
+    if (playerPos == winPos) {
+        incidentalMessage = "You have escaped the dungeon...\nYOU WIN!";
+        DrawBoard();
+        isGameOver = true;
     }
 }
